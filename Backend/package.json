@@ -1,0 +1,19 @@
+{
+  "name": "gdriveclone",
+  "version": "1.0.0",
+  "description": "Google drive clone project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utopix-et/GDriveClone.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/utopix-et/GDriveClone/issues"
+  },
+  "homepage": "https://github.com/utopix-et/GDriveClone#readme"
+}
