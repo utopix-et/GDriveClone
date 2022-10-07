@@ -24,8 +24,8 @@ export default class FileRepository{
             console.log("error");
         }
     }
-    createFolder(name: string, parentFolderId: string, userId: string) {
-        const folder = this.prismaClient.folder.create({
+    async createFolder(name: string, parentFolderId: string, userId: string) {
+        const folder = await this.prismaClient.folder.create({
             data: {
                 name,
                 parentFolderId,
