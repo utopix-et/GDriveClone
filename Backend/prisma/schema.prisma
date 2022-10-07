@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model File{
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  uri     String
+  filename String
+  mimetype String
+  parentFolder Folder? @relation(fields: [parentFolderId], references: [id])
+  parentFolderId String?
+  size    Int
+}
+model Folder {
+  id       String   @id @default(auto())  @map("_id") @db.ObjectId
+  name     String
+  files    File[]
+  folders  Folder[] @relation("FolderToFolder")
+  parentFolder Folder? @relation("FolderToFolder", fields: [parentFolderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentFolderId String?
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId String
+  size    Int
+}
+model User {
+  id       String   @id @default(auto())  @map("_id") @db.ObjectId
+  email    String   @unique
+  password String
+  name     String
+  folders  Folder[]
+}
