@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import File from '../resources/users/interface';
+
 
 export default class FileRepository{
     prismaClient: PrismaClient<never, never>;
