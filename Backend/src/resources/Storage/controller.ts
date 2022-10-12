@@ -23,6 +23,7 @@ export default class StorageController {
             }
         );
         this.fileRepository = new FileRepository();
+        this.fileRepository.init();
         this.cloudStorage = getStorage().bucket();
     }
     random() {
@@ -75,17 +76,85 @@ export default class StorageController {
     //delete file and folder request handler
     // route /storage/delete/:id?type={file/folder}
     async delete(req: Request, res: Response) {
-        console.log("Not yet implemented")
+        const { type } = req.query;
+        const { id } = req.params;
+        if (!id && !type) {
+            res.status(400).json({
+                message: "Invalid input",
+            })
+        }
+        if (type == "file") {
+            console.log("Not yet implemented")
+            return;
+        }
+        else if (type == "folder") {
+            try {
+                const folder = await this.fileRepository.deleteFolder(id);
+                res.json({
+                    message: "successfully deleted"
+                });
+            } catch (err) {
+                res.status(400).json({
+                    message: "can't rename a folder"
+                })
+            }
+            return;
+        }
+        res.send("hello")
+
     }
     //createfolder request handler
     //route /storage/create
     async createFolder(req: Request, res: Response) {
-        console.log("Not yet implemented")
+        try {
+            const { name, parentFolder } = req.body;
+            if (!name && !parentFolder) {
+                res.status(400).json({
+                    message: "Invalid input",
+                })
+                return;
+            }
+            const data = await this.fileRepository.createFolder(name, parentFolder, req.body.user);
+            res.status(201).send(data);
+        } catch (err) {
+            console.log(err)
+            res.status(400).send(err)
+        }
     }
     //rename file and folder request handler
     //route /storage/rename/:id?type={file/folder}
     async rename(req: Request, res: Response) {
-        console.log("Not yet implemented")
+        const { type } = req.query;
+        console.log(type)
+        const { id, newName } = req.body;
+        if (!type && (type == "/file" || type == "/folder") && !id && !newName) {
+            res.status(400).json({
+                message: "Invalid input",
+            })
+        }
+        if (type == "file") {
+            try {
+                const file = await this.fileRepository.renameFile(newName, id);
+                res.json(file);
+            } catch (err) {
+                res.status(400).json({
+                    message: "can't rename a folder"
+                })
+            }
+            return;
+            return;
+        }
+        else if (type == "folder") {
+            try {
+                const folder = await this.fileRepository.renameFolder(newName, id);
+                res.json(folder);
+            } catch (err) {
+                res.status(400).json({
+                    message: "can't rename a folder"
+                })
+            }
+            return;
+        }
     }
     //retrieve all files and folder on given folder
     //route /storage/folder/:id

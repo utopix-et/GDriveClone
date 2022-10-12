@@ -1,10 +1,14 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { threadId } from "node:worker_threads";
 
 
 export default class FileRepository{
     prismaClient: PrismaClient<never, never>;
     constructor() {
         this.prismaClient = new PrismaClient();
+    }
+    async init() {
+        await this.prismaClient.$connect();
     }
     async saveFile(file: Prisma.FileCreateInput) {
         try {
@@ -63,7 +67,7 @@ export default class FileRepository{
                 parentFolderId: folderId
             }
         });
-        return Promise.all([folders, files]);
+        return [folders, files];
     }
     async getFolder(folderId: string) {
         const folder = await this.prismaClient.folder.findUnique({
@@ -72,5 +76,16 @@ export default class FileRepository{
             }
         });
         return folder;
+    }
+    async renameFile(newName: string, fileId: string) {
+        const file = await this.prismaClient.file.update({
+            where: {
+                id: fileId
+            },
+            data: {
+                filename: newName
+            }
+        });
+        return file;
     }
 }

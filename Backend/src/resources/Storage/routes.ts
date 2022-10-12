@@ -20,5 +20,7 @@ router.get('/', (req: Request, res: Response) => {
     `);
 })
 router.post('/', (req: Request, res: Response) => storageController.upload(req, res));
-
+router.post('/createfolder', (req: Request, res: Response) => storageController.createFolder(req, res))
+router.post('/rename', (req: Request, res: Response) => storageController.rename(req, res))
+router.post("/delete/:id", (req: Request, res: Response) => storageController.delete(req, res) )
 export default router;
